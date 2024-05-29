@@ -46,6 +46,6 @@ architecture Behavioral of siso_shiftreg is
  WHENOTHERS=>
               DOUT<="0000";
  ENDCASE;
- ENDIF;
- ENDPROCESS;
+ END IF;
+ END PROCESS;
  end Behavioral;
