@@ -1,0 +1,51 @@
+ library IEEE;
+ use IEEE.STD_LOGIC_1164.ALL;
+ use IEEE.STD_LOGIC_ARITH.ALL;
+ use IEEE.STD_LOGIC_UNSIGNED.ALL;
+ use IEEE.numeric_std.ALL;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;--use UNISIM.VComponents.all;
+
+ entity siso_shiftreg is
+   Port ( DIN : in STD_LOGIC_VECTOR (3 downto 0);
+       MOD1: in STD_LOGIC_VECTOR (1 downto 0);
+       CLK : in STD_LOGIC;
+       RST : in STD_LOGIC;
+       DOUT: inout STD_LOGIC_VECTOR (3 downto 0));
+ end siso_shiftreg;
+architecture Behavioral of siso_shiftreg is
+ signal MSBIN,LSBIN: STD_LOGIC;
+ signal temp: STD_LOGIC_VECTOR(3 DOWNTO 0);
+ begin
+ MSBIN <= DIN(3);
+ LSBIN <= DIN(0);
+
+ PROCESS(CLK,RST)
+ BEGIN
+ IF(RST = '1') THEN
+ DOUT<="0000";
+ temp <= "0000";
+
+ ELSIF(CLK'EVENT AND CLK ='1') THEN
+ CASE MOD1 IS
+
+ WHEN"00" =>
+             DOUT <= MSBIN & DOUT(3 DOWNTO 1);
+ WHEN"01" =>
+             DOUT<=DIN;
+ WHEN"10" =>
+              temp <= MSBIN & temp(3 DOWNTO 1);--SIPO
+              DOUT<=temp;
+ WHEN"11" =>
+              DOUT<=DOUT(2 DOWNTO0)&LSBIN;
+ WHENOTHERS=>
+              DOUT<="0000";
+ ENDCASE;
+ ENDIF;
+ ENDPROCESS;
+ end Behavioral;
